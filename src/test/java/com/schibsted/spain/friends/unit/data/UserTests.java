@@ -1,4 +1,4 @@
-package com.schibsted.spain.friends.data;
+package com.schibsted.spain.friends.unit.data;
 
 import com.schibsted.spain.friends.domain.User;
 import com.schibsted.spain.friends.repository.UserRepository;
@@ -25,7 +25,7 @@ public class UserTests {
     private UserRepository userRepository;
 
     @Test
-    public void findByUsername() {
+    public void findUserByUsername() {
         // given
         User registeredUser = new User();
         registeredUser.setUsername("test");
@@ -41,6 +41,26 @@ public class UserTests {
         Assert.assertTrue(found.isPresent());
         User userFound = found.get();
         Assert.assertEquals(registeredUser.getUsername(), userFound.getUsername());
+    }
+
+    @Test
+    public void existsUserByUsername(){
+        // given
+        User registeredUser = new User();
+        registeredUser.setUsername("test");
+        registeredUser.setPassword("pass");
+        entityManager.persist(registeredUser);
+        entityManager.flush();
+        userRepository.save(registeredUser);
+
+        boolean existsUser = userRepository.existsUserByUsername(registeredUser.getUsername());
+
+        Assert.assertTrue(existsUser);
+
+        boolean notExistsUser = userRepository.existsUserByUsername("notpresent");
+
+        Assert.assertFalse(notExistsUser);
+
     }
 
 }

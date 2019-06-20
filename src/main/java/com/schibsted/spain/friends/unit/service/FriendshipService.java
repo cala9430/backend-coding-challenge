@@ -1,4 +1,4 @@
-package com.schibsted.spain.friends.service;
+package com.schibsted.spain.friends.unit.service;
 
 import org.springframework.stereotype.Service;
 
