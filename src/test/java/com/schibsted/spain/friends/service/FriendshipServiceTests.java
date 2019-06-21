@@ -1,4 +1,4 @@
-package com.schibsted.spain.friends.unit.service;
+package com.schibsted.spain.friends.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

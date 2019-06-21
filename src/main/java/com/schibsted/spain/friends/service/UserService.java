@@ -1,4 +1,4 @@
-package com.schibsted.spain.friends.unit.service;
+package com.schibsted.spain.friends.service;
 
 import com.schibsted.spain.friends.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
