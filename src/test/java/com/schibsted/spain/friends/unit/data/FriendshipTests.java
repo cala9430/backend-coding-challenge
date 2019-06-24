@@ -1,6 +1,7 @@
 package com.schibsted.spain.friends.unit.data;
 
 import com.schibsted.spain.friends.domain.Friendship;
+import com.schibsted.spain.friends.domain.FriendshipStatus;
 import com.schibsted.spain.friends.domain.User;
 import com.schibsted.spain.friends.repository.FriendshipRepository;
 import org.junit.Assert;
@@ -38,7 +39,7 @@ public class FriendshipTests {
         Friendship registeredFriendship = new Friendship();
         registeredFriendship.setUser(user1);
         registeredFriendship.setFriend(user2);
-        registeredFriendship.setStatus("REQUESTED");
+        registeredFriendship.setStatus(FriendshipStatus.REQUESTED);
         entityManager.persist(registeredFriendship);
         entityManager.flush();
 
@@ -60,7 +61,7 @@ public class FriendshipTests {
         Friendship registeredFriendship = new Friendship();
         registeredFriendship.setUser(user1);
         registeredFriendship.setFriend(user2);
-        registeredFriendship.setStatus("REQUESTED");
+        registeredFriendship.setStatus(FriendshipStatus.REQUESTED);
         entityManager.persist(registeredFriendship);
         entityManager.flush();
 

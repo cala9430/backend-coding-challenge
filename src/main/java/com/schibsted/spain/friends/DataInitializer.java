@@ -1,6 +1,7 @@
 package com.schibsted.spain.friends;
 
 import com.schibsted.spain.friends.domain.Friendship;
+import com.schibsted.spain.friends.domain.FriendshipStatus;
 import com.schibsted.spain.friends.domain.User;
 import com.schibsted.spain.friends.repository.FriendshipRepository;
 import com.schibsted.spain.friends.repository.UserRepository;
@@ -36,7 +37,7 @@ public class DataInitializer implements CommandLineRunner {
         Friendship friendship = new Friendship();
         friendship.setUser(user1);
         friendship.setFriend(user2);
-        friendship.setStatus("REQUESTED");
+        friendship.setStatus(FriendshipStatus.REQUESTED);
         this.friendships.save(friendship);
 
     }
