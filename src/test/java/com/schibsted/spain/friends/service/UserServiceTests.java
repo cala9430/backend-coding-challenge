@@ -57,4 +57,19 @@ public class UserServiceTests {
 
         this.userService.registerNewUser(newUser.getUsername(), newUser.getPassword());
     }
+
+    @Test
+    public void findUserByUsernamePresent(){
+        Optional<User> optionalUser = this.userService.findByUsername("test");
+
+        Assert.assertTrue(optionalUser.isPresent());
+        User user = optionalUser.get();
+        Assert.assertEquals("test", user.getUsername());
+    }
+
+    @Test
+    public void findUserByUsernameNotPresent(){
+        Optional<User> optionalUser = this.userService.findByUsername("usernotfound");
+        Assert.assertFalse(optionalUser.isPresent());
+    }
 }
