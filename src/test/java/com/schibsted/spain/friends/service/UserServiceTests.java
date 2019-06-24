@@ -8,7 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
@@ -16,14 +19,20 @@ import java.util.Optional;
 @RunWith(SpringRunner.class)
 public class UserServiceTests {
 
-    private final UserService userService;
+    @TestConfiguration
+    static class UserServiceImplTestContextConfiguration {
+
+        @Bean
+        public UserService userService() {
+            return new UserService();
+        }
+    }
+
+    @Autowired
+    private UserService userService;
 
     @MockBean
     private UserRepository userRepository;
-
-    public UserServiceTests() {
-        this.userService = new UserService(userRepository);
-    }
 
     @Before
     public void setUp() {

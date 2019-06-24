@@ -11,12 +11,8 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
-
     @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private UserRepository userRepository;
 
     public boolean registerNewUser(String username, String password){
         throw new NotImplementedException();
@@ -27,6 +23,6 @@ public class UserService {
     }
 
     public Optional<User> findByUsername(String username){
-        throw new NotImplementedException();
+        return this.userRepository.findByUsername(username);
     }
 }
