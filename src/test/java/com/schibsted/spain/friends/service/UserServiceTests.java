@@ -53,9 +53,12 @@ public class UserServiceTests {
         newUser.setUsername("test2");
         newUser.setPassword("pass2");
 
-        boolean success = this.userService.registerNewUser(newUser.getUsername(), newUser.getPassword());
+        Mockito.when(userRepository.save(newUser))
+                .thenReturn(newUser);
 
-        Assert.assertTrue(success);
+        User registerNewUser = this.userService.registerNewUser(newUser.getUsername(), newUser.getPassword());
+
+        Assert.assertNotNull(registerNewUser);
     }
 
     @Test(expected = DuplicatedUserException.class)
