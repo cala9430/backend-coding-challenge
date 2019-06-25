@@ -7,6 +7,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
+/**
+ * Keep SpringSecurity for further refactor over authentication. Not used on legacy controller
+ */
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 

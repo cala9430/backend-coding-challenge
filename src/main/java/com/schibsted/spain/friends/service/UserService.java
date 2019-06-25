@@ -19,6 +19,12 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Registers a new User
+     * @param username  User username
+     * @param password  User password
+     * @return          Resultant User entity
+     */
     public User registerNewUser(String username, String password){
         this.validatorService.validateUsername(username);
         this.validatorService.validatePassword(password);
@@ -35,6 +41,12 @@ public class UserService {
         return this.userRepository.save(newUser);
     }
 
+    /**
+     * Authenticates User by username and password
+     * @param username  User username
+     * @param password  User password
+     * @return          User if credentials were Ok
+     */
     public User authenticateUser(String username, String password){
         Optional<User> optionalUser = this.userRepository.findByUsernameAndPassword(username, password);
         if(optionalUser.isPresent()){

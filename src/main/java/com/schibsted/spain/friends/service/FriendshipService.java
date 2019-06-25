@@ -23,6 +23,11 @@ public class FriendshipService {
 
     private FriendshipComparator friendshipComparator = new FriendshipComparator();
 
+    /**
+     * Lists Users username with friendship accepted for the user requested
+     * @param user  User to be evaluated
+     * @return      List of usernames
+     */
     public List<String> listAcceptedFriendshipUsers(User user){
         List<String> result = new ArrayList<>();
 
@@ -36,17 +41,36 @@ public class FriendshipService {
         return result;
     }
 
+    /**
+     * Request friendship
+     * @param user      User requester
+     * @param friend    User requested
+     * @return          Resultant friendship
+     */
     public Friendship requestFriendship(User user, User friend){
         return this.performFriendshipAction(user, friend, REQUESTED);
     }
 
+    /**
+     * Accept friendship
+     * @param user      User answering
+     * @param friend    User requester
+     * @return          Updated friendship
+     */
     public Friendship acceptFriendship(User user, User friend){
         return this.performFriendshipAction(user, friend, ACCEPTED);
     }
 
+    /**
+     * Accept friendship
+     * @param user      User answering
+     * @param friend    User requester
+     * @return          Updated friendship
+     */
     public Friendship declineFriendship(User user, User friend){
         return this.performFriendshipAction(user, friend, DECLINED);
     }
+
 
     private Friendship performFriendshipAction(User user, User friend, FriendshipStatus newStatus){
         if(user.equals(friend)){
@@ -56,12 +80,19 @@ public class FriendshipService {
         return this.saveFriendshipStatus(user, friend, newStatus);
     }
 
+    /**
+     * State machine for Friendship status. Creates a friendship Request or updates the existing one when Declining or Accepting
+     * @param user      User that performs the action
+     * @param friend    User target of the action
+     * @param newStatus New Status for the friendship
+     * @return          Resultant friendship entity
+     */
     @Transactional
     protected Friendship saveFriendshipStatus(User user, User friend, FriendshipStatus newStatus){
         Optional<Friendship> actualFriendship = this.friendshipRepository.findByUserAndFriend(user, friend);
         Optional<Friendship> reverseFriendship = this.friendshipRepository.findByUserAndFriend(friend, user);
 
-        Friendship friendshipRequest = null;
+        Friendship friendshipRequest;
         switch (newStatus){
             case REQUESTED:
                 if ((actualFriendship.isPresent() && !DECLINED.equals(actualFriendship.get().getStatus())) ||
@@ -93,6 +124,12 @@ public class FriendshipService {
         return this.friendshipRepository.save(friendshipRequest);
     }
 
+    /**
+     * Extracts the right username from friendship for user
+     * @param user          User requesting
+     * @param friendship    Friendship to be processed
+     * @return              Username of friend
+     */
     private String extractFriendUsername(User user, Friendship friendship) {
         if(friendship.getUser().equals(user)){
             return friendship.getFriend().getUsername();
