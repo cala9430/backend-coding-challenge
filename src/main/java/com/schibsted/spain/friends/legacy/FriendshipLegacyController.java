@@ -33,9 +33,9 @@ public class FriendshipLegacyController {
       @RequestParam("usernameTo") String usernameTo,
       @RequestHeader("X-Password") String password
   ) {
-    Optional<User> user = this.userService.authenticateUser(usernameFrom, password);
-    Optional<User> friend = this.userService.findByUsername(usernameTo);
-    this.friendshipService.requestFriendship(user.get(), friend.get());
+    this.friendshipService.requestFriendship(
+            this.userService.authenticateUser(usernameFrom, password),
+            this.userService.getByUsername(usernameTo));
 
   }
 
@@ -45,9 +45,9 @@ public class FriendshipLegacyController {
       @RequestParam("usernameTo") String usernameTo,
       @RequestHeader("X-Password") String password
   ) {
-    Optional<User> user = this.userService.authenticateUser(usernameFrom, password);
-    Optional<User> friend = this.userService.findByUsername(usernameTo);
-    this.friendshipService.acceptFriendship(user.get(), friend.get());
+    this.friendshipService.acceptFriendship(
+            this.userService.authenticateUser(usernameFrom, password),
+            this.userService.getByUsername(usernameTo));
   }
 
   @PostMapping("/decline")
@@ -56,9 +56,9 @@ public class FriendshipLegacyController {
       @RequestParam("usernameTo") String usernameTo,
       @RequestHeader("X-Password") String password
   ) {
-    Optional<User> user = this.userService.authenticateUser(usernameFrom, password);
-    Optional<User> friend = this.userService.findByUsername(usernameTo);
-    this.friendshipService.declineFriendship(user.get(), friend.get());
+    this.friendshipService.declineFriendship(
+            this.userService.authenticateUser(usernameFrom, password),
+            this.userService.getByUsername(usernameTo));
   }
 
   @GetMapping("/list")
@@ -66,8 +66,6 @@ public class FriendshipLegacyController {
       @RequestParam("username") String username,
       @RequestHeader("X-Password") String password
   ) {
-    Optional<User> user = this.userService.authenticateUser(username, password);
-
-    return this.friendshipService.listFriendship(user.get());
+    return this.friendshipService.listFriendship(this.userService.authenticateUser(username, password));
   }
 }

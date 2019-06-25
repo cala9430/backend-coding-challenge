@@ -34,6 +34,9 @@ public class UserServiceTests {
     @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private ParamValidatorService validatorService;
+
     @Before
     public void setUp() {
         User test = new User();
@@ -45,6 +48,9 @@ public class UserServiceTests {
 
         Mockito.when(userRepository.existsUserByUsername(test.getUsername()))
                 .thenReturn(true);
+
+        Mockito.doNothing().when(validatorService).validateUsername(Mockito.anyString());
+        Mockito.doNothing().when(validatorService).validatePassword(Mockito.anyString());
     }
 
     @Test

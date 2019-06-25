@@ -26,4 +26,5 @@ public class SignupLegacyController {
   ) {
     this.userService.registerNewUser(username, password);
   }
+
 }

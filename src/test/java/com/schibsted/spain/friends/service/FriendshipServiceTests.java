@@ -123,8 +123,8 @@ public class FriendshipServiceTests {
                 .thenReturn(Optional.of(friendshipRequested));
 
         Friendship friendship = new Friendship();
-        friendship.setUser(user);
-        friendship.setFriend(friend);
+        friendship.setUser(friend);
+        friendship.setFriend(user);
         friendship.setStatus(FriendshipStatus.ACCEPTED);
         Mockito.when(this.friendshipRepository.save(friendship))
                 .thenReturn(friendship);
