@@ -16,10 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 public class FriendshipServiceTests {
@@ -58,7 +55,7 @@ public class FriendshipServiceTests {
         Friendship friendship = new Friendship();
         friendship.setUser(user2);
         friendship.setFriend(user);
-        friendship.setStatus(FriendshipStatus.REQUESTED);
+        friendship.setStatus(FriendshipStatus.ACCEPTED);
 
         Mockito.when(friendshipRepository.findAllByUser(user2)).thenReturn(Arrays.asList(friendship));
         Mockito.when(friendshipRepository.findAllByUser(user)).thenReturn(Arrays.asList(friendship));
@@ -68,7 +65,7 @@ public class FriendshipServiceTests {
     public void listEmptyFriendshipForUser() {
         User user = new User();
         user.setUsername("noFriendsUser");
-        List<Friendship> friendshipList = this.friendshipService.listFriendship(user);
+        List<String> friendshipList = this.friendshipService.listAcceptedFriendshipUsers(user);
 
         Assert.assertNotNull(friendshipList);
         Assert.assertEquals(0, friendshipList.size());
@@ -78,12 +75,11 @@ public class FriendshipServiceTests {
     public void listNotEmptyFriendshipForUser() {
         User user = new User();
         user.setUsername("test1");
-        List<Friendship> friendshipList = this.friendshipService.listFriendship(user);
+        List<String> friendshipList = this.friendshipService.listAcceptedFriendshipUsers(user);
 
         Assert.assertNotNull(friendshipList);
         Assert.assertEquals(1, friendshipList.size());
-        Assert.assertEquals("test1", friendshipList.get(0).getFriend().getUsername());
-        Assert.assertEquals(FriendshipStatus.REQUESTED, friendshipList.get(0).getStatus());
+        Assert.assertTrue( friendshipList.contains("test1"));
     }
 
     @Test

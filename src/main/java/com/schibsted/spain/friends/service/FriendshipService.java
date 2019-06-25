@@ -5,12 +5,13 @@ import com.schibsted.spain.friends.domain.FriendshipStatus;
 import com.schibsted.spain.friends.domain.User;
 import com.schibsted.spain.friends.domain.exception.InvalidFriendshipStatus;
 import com.schibsted.spain.friends.repository.FriendshipRepository;
+import com.schibsted.spain.friends.service.comparator.FriendshipComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.schibsted.spain.friends.domain.FriendshipStatus.*;
 
@@ -20,21 +21,39 @@ public class FriendshipService {
     @Autowired
     private FriendshipRepository friendshipRepository;
 
-    public List<Friendship> listFriendship(User user){
-        return this.friendshipRepository.findAllByUser(user);
+    private FriendshipComparator friendshipComparator = new FriendshipComparator();
+
+    public List<String> listAcceptedFriendshipUsers(User user){
+        List<String> result = new ArrayList<>();
+
+        List<Friendship> friendships = this.friendshipRepository.findAllByUserAndStatus(user, ACCEPTED);
+
+        if(!CollectionUtils.isEmpty(friendships)){
+            friendships.sort((o1,o2)-> friendshipComparator.compare(o1,o2));
+            friendships.forEach(friendship -> result.add(this.extractFriendUsername(user, friendship)));
+        }
+
+        return result;
     }
 
     public Friendship requestFriendship(User user, User friend){
-        return this.saveFriendshipStatus(user, friend, REQUESTED);
+        return this.performFriendshipAction(user, friend, REQUESTED);
     }
 
-
     public Friendship acceptFriendship(User user, User friend){
-        return this.saveFriendshipStatus(user, friend, ACCEPTED);
+        return this.performFriendshipAction(user, friend, ACCEPTED);
     }
 
     public Friendship declineFriendship(User user, User friend){
-        return this.saveFriendshipStatus(user, friend, ACCEPTED);
+        return this.performFriendshipAction(user, friend, DECLINED);
+    }
+
+    private Friendship performFriendshipAction(User user, User friend, FriendshipStatus newStatus){
+        if(user.equals(friend)){
+            throw new IllegalArgumentException("Cannot perform a friendship action with yourself");
+        }
+
+        return this.saveFriendshipStatus(user, friend, newStatus);
     }
 
     @Transactional
@@ -70,6 +89,15 @@ public class FriendshipService {
                 throw new IllegalArgumentException(String.format("Unmapped friendship status: %s", String.valueOf(newStatus)));
         }
 
+        friendshipRequest.setLastModifiedDate(new Date());
         return this.friendshipRepository.save(friendshipRequest);
+    }
+
+    private String extractFriendUsername(User user, Friendship friendship) {
+        if(friendship.getUser().equals(user)){
+            return friendship.getFriend().getUsername();
+        }else{
+            return friendship.getUser().getUsername();
+        }
     }
 }

@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public User authenticateUser(String username, String password){
-        Optional<User> optionalUser = this.userRepository.findByUsername(username);
+        Optional<User> optionalUser = this.userRepository.findByUsernameAndPassword(username, password);
         if(optionalUser.isPresent()){
             return optionalUser.get();
         }

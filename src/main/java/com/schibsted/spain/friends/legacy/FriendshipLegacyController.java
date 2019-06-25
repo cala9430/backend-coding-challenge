@@ -1,6 +1,5 @@
 package com.schibsted.spain.friends.legacy;
 
-import com.schibsted.spain.friends.domain.User;
 import com.schibsted.spain.friends.service.FriendshipService;
 import com.schibsted.spain.friends.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/friendship")
@@ -66,6 +63,6 @@ public class FriendshipLegacyController {
       @RequestParam("username") String username,
       @RequestHeader("X-Password") String password
   ) {
-    return this.friendshipService.listFriendship(this.userService.authenticateUser(username, password));
+    return this.friendshipService.listAcceptedFriendshipUsers(this.userService.authenticateUser(username, password));
   }
 }

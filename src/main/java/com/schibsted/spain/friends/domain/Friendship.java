@@ -1,7 +1,10 @@
 package com.schibsted.spain.friends.domain;
 
+import org.springframework.data.annotation.LastModifiedDate;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -21,6 +24,9 @@ public class Friendship implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private FriendshipStatus status;
+
+    @LastModifiedDate
+    private Date lastModifiedDate;
 
     public User getUser() {
         return user;
@@ -44,6 +50,14 @@ public class Friendship implements Serializable {
 
     public void setStatus(FriendshipStatus status) {
         this.status = status;
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     @Override
