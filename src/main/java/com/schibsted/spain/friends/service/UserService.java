@@ -5,7 +5,6 @@ import com.schibsted.spain.friends.domain.exception.DuplicatedUserException;
 import com.schibsted.spain.friends.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Optional;
 
@@ -13,9 +12,14 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
+    private ParamValidatorService validatorService;
+
+    @Autowired
     private UserRepository userRepository;
 
     public User registerNewUser(String username, String password){
+        this.validatorService.validateUsername(username);
+
         Optional<User> user = this.findByUsername(username);
         if(user.isPresent()){
             throw new DuplicatedUserException(String.format("Username %s is already taken", username));
