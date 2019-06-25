@@ -1,4 +1,4 @@
-package com.schibsted.spain.friends.unit.data;
+package com.schibsted.spain.friends.data;
 
 import com.schibsted.spain.friends.domain.User;
 import com.schibsted.spain.friends.repository.UserRepository;

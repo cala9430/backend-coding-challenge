@@ -46,7 +46,7 @@ public class FriendshipServiceTests {
         user.setUsername("test1");
         user.setPassword("pass");
 
-        Mockito.when(friendshipRepository.findAllByUser(user)).thenReturn(new ArrayList<>());
+        Mockito.when(friendshipRepository.findAllByUserAndStatus(user, FriendshipStatus.ACCEPTED)).thenReturn(new ArrayList<>());
 
         User user2 = new User();
         user2.setUsername("test2");
@@ -57,8 +57,8 @@ public class FriendshipServiceTests {
         friendship.setFriend(user);
         friendship.setStatus(FriendshipStatus.ACCEPTED);
 
-        Mockito.when(friendshipRepository.findAllByUser(user2)).thenReturn(Arrays.asList(friendship));
-        Mockito.when(friendshipRepository.findAllByUser(user)).thenReturn(Arrays.asList(friendship));
+        Mockito.when(friendshipRepository.findAllByUserAndStatus(user2, FriendshipStatus.ACCEPTED)).thenReturn(Arrays.asList(friendship));
+        Mockito.when(friendshipRepository.findAllByUserAndStatus(user,FriendshipStatus.ACCEPTED)).thenReturn(Arrays.asList(friendship));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class FriendshipServiceTests {
 
         Assert.assertNotNull(friendshipList);
         Assert.assertEquals(1, friendshipList.size());
-        Assert.assertTrue( friendshipList.contains("test1"));
+        Assert.assertTrue( friendshipList.contains("test2"));
     }
 
     @Test

@@ -1,4 +1,4 @@
-package com.schibsted.spain.friends.unit.data;
+package com.schibsted.spain.friends.data;
 
 import com.schibsted.spain.friends.domain.Friendship;
 import com.schibsted.spain.friends.domain.FriendshipStatus;
@@ -39,11 +39,11 @@ public class FriendshipTests {
         Friendship registeredFriendship = new Friendship();
         registeredFriendship.setUser(user1);
         registeredFriendship.setFriend(user2);
-        registeredFriendship.setStatus(FriendshipStatus.REQUESTED);
+        registeredFriendship.setStatus(FriendshipStatus.ACCEPTED);
         entityManager.persist(registeredFriendship);
         entityManager.flush();
 
-        List<Friendship> friendshipList = this.friendshipRepository.findAllByUser(user1);
+        List<Friendship> friendshipList = this.friendshipRepository.findAllByUserAndStatus(user1, FriendshipStatus.ACCEPTED);
 
         Assert.assertEquals(1, friendshipList.size());
     }
@@ -61,11 +61,11 @@ public class FriendshipTests {
         Friendship registeredFriendship = new Friendship();
         registeredFriendship.setUser(user1);
         registeredFriendship.setFriend(user2);
-        registeredFriendship.setStatus(FriendshipStatus.REQUESTED);
+        registeredFriendship.setStatus(FriendshipStatus.ACCEPTED);
         entityManager.persist(registeredFriendship);
         entityManager.flush();
 
-        List<Friendship> friendshipList = this.friendshipRepository.findAllByUser(user2);
+        List<Friendship> friendshipList = this.friendshipRepository.findAllByUserAndStatus(user2, FriendshipStatus.ACCEPTED);
 
         Assert.assertEquals(1, friendshipList.size());
     }
