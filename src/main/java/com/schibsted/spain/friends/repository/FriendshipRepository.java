@@ -1,6 +1,7 @@
 package com.schibsted.spain.friends.repository;
 
 import com.schibsted.spain.friends.domain.Friendship;
+import com.schibsted.spain.friends.domain.FriendshipStatus;
 import com.schibsted.spain.friends.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,5 +20,5 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
 
     List<Friendship> findAllByUser(User user);
 
-    Optional<Friendship> findByUserUsernameAndFriendUsername(String username, String friendUsername);
+    Optional<Friendship> findByUserAndFriend(User username, User friend);
 }
