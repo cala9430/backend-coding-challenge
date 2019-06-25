@@ -63,4 +63,38 @@ public class UserTests {
 
     }
 
+    @Test
+    public void findByUsernameAndPasswordOkTest() {
+        // given
+        User registeredUser = new User();
+        registeredUser.setUsername("test");
+        registeredUser.setPassword("pass");
+        entityManager.persist(registeredUser);
+        entityManager.flush();
+        userRepository.save(registeredUser);
+
+        Optional<User> optionalUser = userRepository.findByUsernameAndPassword(registeredUser.getUsername(), registeredUser.getPassword());
+        Assert.assertTrue(optionalUser.isPresent());
+
+        User user = optionalUser.get();
+
+        Assert.assertEquals(registeredUser.getUsername(), user.getUsername());
+        Assert.assertEquals(registeredUser.getPassword(), user.getPassword());
+
+    }
+
+    @Test
+    public void findByUsernameAndPasswordNotMatchTest() {
+        // given
+        User registeredUser = new User();
+        registeredUser.setUsername("test");
+        registeredUser.setPassword("pass");
+        entityManager.persist(registeredUser);
+        entityManager.flush();
+        userRepository.save(registeredUser);
+
+        Optional<User> optionalUser = userRepository.findByUsernameAndPassword(registeredUser.getUsername(), "notThisPassword");
+        Assert.assertFalse(optionalUser.isPresent());
+
+    }
 }
