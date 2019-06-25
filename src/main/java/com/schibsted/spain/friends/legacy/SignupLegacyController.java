@@ -24,6 +24,6 @@ public class SignupLegacyController {
       @RequestParam("username") String username,
       @RequestHeader("X-Password") String password
   ) {
-    throw new RuntimeException("not implemented yet!");
+    this.userService.registerNewUser(username, password);
   }
 }

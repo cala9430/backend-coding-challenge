@@ -16,9 +16,8 @@ import java.util.Optional;
 @Repository
 public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
 
-    List<Friendship> findAllByUserUsername(String username);
-
-    List<Friendship> findAllByUser(User user);
+    @Query("SELECT fs FROM Friendship fs WHERE fs.user = :user OR fs.friend = :user")
+    List<Friendship> findAllByUser(@Param("user") User user);
 
     Optional<Friendship> findByUserAndFriend(User username, User friend);
 }

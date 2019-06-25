@@ -21,8 +21,8 @@ public class FriendshipService {
     private FriendshipRepository friendshipRepository;
 
 
-    public List<Friendship> listFriendship(String username){
-        return this.friendshipRepository.findAllByUserUsername(username);
+    public List<Friendship> listFriendship(User user){
+        return this.friendshipRepository.findAllByUser(user);
     }
 
     public Friendship requestFriendship(User user, User friend){

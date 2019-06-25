@@ -28,8 +28,8 @@ public class UserService {
         return this.userRepository.save(newUser);
     }
 
-    public void authenticateUser(){
-        throw new NotImplementedException();
+    public Optional<User> authenticateUser(String username, String password){
+        return this.userRepository.findByUsername(username);
     }
 
     public Optional<User> findByUsername(String username){

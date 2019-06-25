@@ -27,28 +27,6 @@ public class FriendshipTests {
     private FriendshipRepository friendshipRepository;
 
     @Test
-    public void findFriendshipByUsername() {
-        User user1 = new User();
-        user1.setUsername("user1");
-        user1.setPassword("pass");
-
-        User user2 = new User();
-        user2.setUsername("user2");
-        user2.setPassword("pass");
-
-        Friendship registeredFriendship = new Friendship();
-        registeredFriendship.setUser(user1);
-        registeredFriendship.setFriend(user2);
-        registeredFriendship.setStatus(FriendshipStatus.REQUESTED);
-        entityManager.persist(registeredFriendship);
-        entityManager.flush();
-
-        List<Friendship> friendshipList = this.friendshipRepository.findAllByUserUsername(user1.getUsername());
-
-        Assert.assertEquals(1, friendshipList.size());
-    }
-
-    @Test
     public void findFriendshipByUser() {
         User user1 = new User();
         user1.setUsername("user1");
@@ -70,5 +48,25 @@ public class FriendshipTests {
         Assert.assertEquals(1, friendshipList.size());
     }
 
+    @Test
+    public void findFriendshipByFriend() {
+        User user1 = new User();
+        user1.setUsername("user1");
+        user1.setPassword("pass");
 
+        User user2 = new User();
+        user2.setUsername("user2");
+        user2.setPassword("pass");
+
+        Friendship registeredFriendship = new Friendship();
+        registeredFriendship.setUser(user1);
+        registeredFriendship.setFriend(user2);
+        registeredFriendship.setStatus(FriendshipStatus.REQUESTED);
+        entityManager.persist(registeredFriendship);
+        entityManager.flush();
+
+        List<Friendship> friendshipList = this.friendshipRepository.findAllByUser(user2);
+
+        Assert.assertEquals(1, friendshipList.size());
+    }
 }
