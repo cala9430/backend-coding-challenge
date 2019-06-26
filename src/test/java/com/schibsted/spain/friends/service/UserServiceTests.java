@@ -2,6 +2,7 @@ package com.schibsted.spain.friends.service;
 
 import com.schibsted.spain.friends.domain.User;
 import com.schibsted.spain.friends.domain.exception.DuplicatedUserException;
+import com.schibsted.spain.friends.domain.exception.InvalidCredentialsException;
 import com.schibsted.spain.friends.repository.UserRepository;
 import org.junit.Assert;
 import org.junit.Before;
@@ -44,6 +45,9 @@ public class UserServiceTests {
         test.setPassword("pass");
 
         Mockito.when(userRepository.findByUsername(test.getUsername()))
+                .thenReturn(Optional.of(test));
+
+        Mockito.when(userRepository.findByUsernameAndPassword(test.getUsername(), test.getPassword()))
                 .thenReturn(Optional.of(test));
 
         Mockito.when(userRepository.existsUserByUsername(test.getUsername()))
@@ -89,5 +93,10 @@ public class UserServiceTests {
     public void findUserByUsernameNotPresent(){
         Optional<User> optionalUser = this.userService.findByUsername("usernotfound");
         Assert.assertFalse(optionalUser.isPresent());
+    }
+
+    @Test(expected = InvalidCredentialsException.class)
+    public void invalidCredentialsTest() {
+        this.userService.authenticateUser("test", "wrongPassword");
     }
 }

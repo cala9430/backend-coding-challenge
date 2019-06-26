@@ -37,9 +37,6 @@ public class FriendshipServiceTests {
     @MockBean
     private FriendshipRepository friendshipRepository;
 
-    @MockBean
-    private UserService userService;
-
     @Before
     public void setUp() throws Exception {
         User user = new User();
@@ -55,10 +52,21 @@ public class FriendshipServiceTests {
         Friendship friendship = new Friendship();
         friendship.setUser(user2);
         friendship.setFriend(user);
+        friendship.setLastModifiedDate(new Date());
         friendship.setStatus(FriendshipStatus.ACCEPTED);
 
+        User user3 = new User();
+        user3.setUsername("test3");
+        user3.setPassword("pass");
+
+        Friendship friendship2 = new Friendship();
+        friendship2.setUser(user3);
+        friendship2.setFriend(user);
+        friendship2.setLastModifiedDate(new Date());
+        friendship2.setStatus(FriendshipStatus.ACCEPTED);
+
         Mockito.when(friendshipRepository.findAllByUserAndStatus(user2, FriendshipStatus.ACCEPTED)).thenReturn(Arrays.asList(friendship));
-        Mockito.when(friendshipRepository.findAllByUserAndStatus(user,FriendshipStatus.ACCEPTED)).thenReturn(Arrays.asList(friendship));
+        Mockito.when(friendshipRepository.findAllByUserAndStatus(user,FriendshipStatus.ACCEPTED)).thenReturn(Arrays.asList(friendship, friendship2));
     }
 
     @Test
@@ -74,12 +82,25 @@ public class FriendshipServiceTests {
     @Test
     public void listNotEmptyFriendshipForUser() {
         User user = new User();
-        user.setUsername("test1");
+        user.setUsername("test2");
         List<String> friendshipList = this.friendshipService.listAcceptedFriendshipUsers(user);
 
         Assert.assertNotNull(friendshipList);
         Assert.assertEquals(1, friendshipList.size());
-        Assert.assertTrue( friendshipList.contains("test2"));
+        Assert.assertTrue( friendshipList.contains("test1"));
+    }
+
+    @Test
+    public void listFriendshipOrderTest() {
+        User user = new User();
+        user.setUsername("test1");
+        List<String> friendshipList = this.friendshipService.listAcceptedFriendshipUsers(user);
+
+        Assert.assertNotNull(friendshipList);
+        Assert.assertEquals(2, friendshipList.size());
+        Assert.assertEquals( "test2", friendshipList.get(0));
+        Assert.assertEquals( "test3", friendshipList.get(1));
+
     }
 
     @Test
