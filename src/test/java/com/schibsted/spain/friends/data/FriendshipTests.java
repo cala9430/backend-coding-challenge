@@ -36,10 +36,7 @@ public class FriendshipTests {
         user2.setUsername("user2");
         user2.setPassword("pass");
 
-        Friendship registeredFriendship = new Friendship();
-        registeredFriendship.setUser(user1);
-        registeredFriendship.setFriend(user2);
-        registeredFriendship.setStatus(FriendshipStatus.ACCEPTED);
+        Friendship registeredFriendship = new Friendship(user1, user2, FriendshipStatus.ACCEPTED);
         entityManager.persist(registeredFriendship);
         entityManager.flush();
 
@@ -58,10 +55,7 @@ public class FriendshipTests {
         user2.setUsername("user2");
         user2.setPassword("pass");
 
-        Friendship registeredFriendship = new Friendship();
-        registeredFriendship.setUser(user1);
-        registeredFriendship.setFriend(user2);
-        registeredFriendship.setStatus(FriendshipStatus.ACCEPTED);
+        Friendship registeredFriendship = new Friendship(user1, user2, FriendshipStatus.ACCEPTED);
         entityManager.persist(registeredFriendship);
         entityManager.flush();
 

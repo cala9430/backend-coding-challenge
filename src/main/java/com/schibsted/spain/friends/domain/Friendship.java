@@ -3,6 +3,7 @@ package com.schibsted.spain.friends.domain;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -11,6 +12,17 @@ import java.util.Objects;
 @Table(name="friendship")
 @IdClass(FriendshipId.class)
 public class Friendship implements Serializable {
+
+    public Friendship() {
+        // For hibernate
+    }
+
+    public Friendship(@NotNull User user, @NotNull User friend, @NotNull FriendshipStatus status) {
+        this.user = user;
+        this.friend = friend;
+        this.status = status;
+        this.lastModifiedDate = new Date();
+    }
 
     @Id
     @ManyToOne
@@ -32,16 +44,8 @@ public class Friendship implements Serializable {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public User getFriend() {
         return friend;
-    }
-
-    public void setFriend(User friend) {
-        this.friend = friend;
     }
 
     public FriendshipStatus getStatus() {
@@ -50,14 +54,11 @@ public class Friendship implements Serializable {
 
     public void setStatus(FriendshipStatus status) {
         this.status = status;
+        this.lastModifiedDate = new Date();
     }
 
     public Date getLastModifiedDate() {
         return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
     }
 
     @Override

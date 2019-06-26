@@ -49,21 +49,13 @@ public class FriendshipServiceTests {
         user2.setUsername("test2");
         user2.setPassword("pass");
 
-        Friendship friendship = new Friendship();
-        friendship.setUser(user2);
-        friendship.setFriend(user);
-        friendship.setLastModifiedDate(new Date());
-        friendship.setStatus(FriendshipStatus.ACCEPTED);
+        Friendship friendship = new Friendship(user2, user, FriendshipStatus.ACCEPTED);
 
         User user3 = new User();
         user3.setUsername("test3");
         user3.setPassword("pass");
 
-        Friendship friendship2 = new Friendship();
-        friendship2.setUser(user3);
-        friendship2.setFriend(user);
-        friendship2.setLastModifiedDate(new Date());
-        friendship2.setStatus(FriendshipStatus.ACCEPTED);
+        Friendship friendship2 = new Friendship(user3, user, FriendshipStatus.ACCEPTED);
 
         Mockito.when(friendshipRepository.findAllByUserAndStatus(user2, FriendshipStatus.ACCEPTED)).thenReturn(Arrays.asList(friendship));
         Mockito.when(friendshipRepository.findAllByUserAndStatus(user,FriendshipStatus.ACCEPTED)).thenReturn(Arrays.asList(friendship, friendship2));
@@ -111,10 +103,7 @@ public class FriendshipServiceTests {
         User friend = new User();
         friend.setUsername("requested");
 
-        Friendship friendship = new Friendship();
-        friendship.setUser(user);
-        friendship.setFriend(friend);
-        friendship.setStatus(FriendshipStatus.REQUESTED);
+        Friendship friendship = new Friendship(user, friend, FriendshipStatus.REQUESTED);
 
         Mockito.when(this.friendshipRepository.save(friendship)).thenReturn(friendship);
 
@@ -132,17 +121,11 @@ public class FriendshipServiceTests {
         User friend = new User();
         friend.setUsername("requester");
 
-        Friendship friendshipRequested = new Friendship();
-        friendshipRequested.setUser(friend);
-        friendshipRequested.setFriend(user);
-        friendshipRequested.setStatus(FriendshipStatus.REQUESTED);
+        Friendship friendshipRequested = new Friendship(friend, user, FriendshipStatus.REQUESTED);
         Mockito.when(this.friendshipRepository.findByUserAndFriend(friend, user))
                 .thenReturn(Optional.of(friendshipRequested));
 
-        Friendship friendship = new Friendship();
-        friendship.setUser(friend);
-        friendship.setFriend(user);
-        friendship.setStatus(FriendshipStatus.ACCEPTED);
+        Friendship friendship = new Friendship(friend, user, FriendshipStatus.ACCEPTED);
         Mockito.when(this.friendshipRepository.save(friendship))
                 .thenReturn(friendship);
 
@@ -171,10 +154,7 @@ public class FriendshipServiceTests {
         User friend = new User();
         friend.setUsername("requester");
 
-        Friendship friendshipRequested = new Friendship();
-        friendshipRequested.setUser(friend);
-        friendshipRequested.setFriend(user);
-        friendshipRequested.setStatus(FriendshipStatus.ACCEPTED);
+        Friendship friendshipRequested = new Friendship(friend, user, FriendshipStatus.ACCEPTED);
         Mockito.when(this.friendshipRepository.findByUserAndFriend(friend, user))
                 .thenReturn(Optional.of(friendshipRequested));
 
@@ -189,10 +169,7 @@ public class FriendshipServiceTests {
         User friend = new User();
         friend.setUsername("requester");
 
-        Friendship friendshipRequested = new Friendship();
-        friendshipRequested.setUser(user);
-        friendshipRequested.setFriend(friend);
-        friendshipRequested.setStatus(FriendshipStatus.ACCEPTED);
+        Friendship friendshipRequested = new Friendship(user, friend, FriendshipStatus.ACCEPTED);
         Mockito.when(this.friendshipRepository.findByUserAndFriend(user, friend))
                 .thenReturn(Optional.of(friendshipRequested));
 

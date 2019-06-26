@@ -100,10 +100,7 @@ public class FriendshipService {
                     throw new InvalidFriendshipStatus("Cannot ask friendship. There is friendship request");
                 }
 
-                friendshipRequest = new Friendship();
-                friendshipRequest.setUser(user);
-                friendshipRequest.setFriend(friend);
-                friendshipRequest.setStatus(newStatus);
+                friendshipRequest = new Friendship(user, friend, newStatus);
 
                 break;
             case ACCEPTED:
@@ -120,7 +117,6 @@ public class FriendshipService {
                 throw new IllegalArgumentException(String.format("Unmapped friendship status: %s", String.valueOf(newStatus)));
         }
 
-        friendshipRequest.setLastModifiedDate(new Date());
         return this.friendshipRepository.save(friendshipRequest);
     }
 
