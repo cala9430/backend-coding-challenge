@@ -10,7 +10,8 @@ import java.util.Comparator;
 public class FriendshipComparator implements Comparator<Friendship> {
     @Override
     public int compare(Friendship o1, Friendship o2) {
-        if(o1 != null && o2 != null){
+        if(o1 != null && o2 != null &&
+                o1.getLastModifiedDate() != null && o2.getLastModifiedDate() != null){
             return o1.getLastModifiedDate().compareTo(o2.getLastModifiedDate());
         }
 

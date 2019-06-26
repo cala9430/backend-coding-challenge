@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
@@ -95,8 +96,31 @@ public class UserServiceTests {
         Assert.assertFalse(optionalUser.isPresent());
     }
 
+    @Test
+    public void validCredentialsTest() {
+        String username = "test";
+        String password = "pass";
+        User user = this.userService.authenticateUser(username, password);
+        Assert.assertNotNull(user);
+        Assert.assertEquals(username, user.getUsername());
+        Assert.assertEquals(password, user.getPassword());
+    }
+
     @Test(expected = InvalidCredentialsException.class)
     public void invalidCredentialsTest() {
         this.userService.authenticateUser("test", "wrongPassword");
+    }
+
+    @Test
+    public void getByUsernameTest() {
+        String username = "test";
+        User user = this.userService.getByUsername(username);
+        Assert.assertNotNull(user);
+        Assert.assertEquals(username, user.getUsername());
+    }
+
+    @Test(expected = UsernameNotFoundException.class)
+    public void getByUsernameNotFoundTest() {
+        this.userService.getByUsername("userNotFound");
     }
 }

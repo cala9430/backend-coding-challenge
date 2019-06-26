@@ -113,6 +113,28 @@ public class FriendshipServiceTests {
         Assert.assertEquals(friendship, savedFriendship);
     }
 
+    @Test(expected = InvalidFriendshipStatus.class)
+    public void requestFriendshipAlreadyRequested() {
+        User user = new User();
+        user.setUsername("requester");
+
+        User friend = new User();
+        friend.setUsername("requested");
+
+        Friendship friendship = new Friendship(user, friend, FriendshipStatus.REQUESTED);
+
+        Mockito.when(this.friendshipRepository.findByUserAndFriend(user, friend)).thenReturn(Optional.of(friendship));
+
+        this.friendshipService.requestFriendship(user, friend);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void requestFriendshipItself() {
+        User user = new User();
+        user.setUsername("requester");
+        this.friendshipService.requestFriendship(user, user);
+    }
+
     @Test
     public void requestAccept(){
         User user = new User();
