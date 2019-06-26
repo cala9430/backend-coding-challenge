@@ -12,6 +12,15 @@ import java.util.Objects;
 @Table(name="users")
 public class User implements UserDetails {
 
+    public User() {
+        // For hibernate
+    }
+
+    public User(@NotEmpty String username, @NotEmpty String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     @Id
     @Column(nullable = false, unique = true)
     @NotEmpty
@@ -53,14 +62,6 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return false;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     @Override

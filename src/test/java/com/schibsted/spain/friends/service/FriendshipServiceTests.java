@@ -39,21 +39,15 @@ public class FriendshipServiceTests {
 
     @Before
     public void setUp() throws Exception {
-        User user = new User();
-        user.setUsername("test1");
-        user.setPassword("pass");
+        User user = new User("test1", "pass");
 
         Mockito.when(friendshipRepository.findAllByUserAndStatus(user, FriendshipStatus.ACCEPTED)).thenReturn(new ArrayList<>());
 
-        User user2 = new User();
-        user2.setUsername("test2");
-        user2.setPassword("pass");
+        User user2 = new User("test2", "pass");
 
         Friendship friendship = new Friendship(user2, user, FriendshipStatus.ACCEPTED);
 
-        User user3 = new User();
-        user3.setUsername("test3");
-        user3.setPassword("pass");
+        User user3 = new User("test3", "pass");
 
         Friendship friendship2 = new Friendship(user3, user, FriendshipStatus.ACCEPTED);
 
@@ -63,8 +57,7 @@ public class FriendshipServiceTests {
 
     @Test
     public void listEmptyFriendshipForUser() {
-        User user = new User();
-        user.setUsername("noFriendsUser");
+        User user = new User("noFriendsUser", "pass");
         List<String> friendshipList = this.friendshipService.listAcceptedFriendshipUsers(user);
 
         Assert.assertNotNull(friendshipList);
@@ -73,8 +66,7 @@ public class FriendshipServiceTests {
 
     @Test
     public void listNotEmptyFriendshipForUser() {
-        User user = new User();
-        user.setUsername("test2");
+        User user = new User("test2", "pass");
         List<String> friendshipList = this.friendshipService.listAcceptedFriendshipUsers(user);
 
         Assert.assertNotNull(friendshipList);
@@ -84,8 +76,7 @@ public class FriendshipServiceTests {
 
     @Test
     public void listFriendshipOrderTest() {
-        User user = new User();
-        user.setUsername("test1");
+        User user = new User("test1", "pass");
         List<String> friendshipList = this.friendshipService.listAcceptedFriendshipUsers(user);
 
         Assert.assertNotNull(friendshipList);
@@ -97,11 +88,8 @@ public class FriendshipServiceTests {
 
     @Test
     public void requestFriendship(){
-        User user = new User();
-        user.setUsername("requester");
-
-        User friend = new User();
-        friend.setUsername("requested");
+        User user = new User("requester", "pass");
+        User friend = new User("requested", "pass");
 
         Friendship friendship = new Friendship(user, friend, FriendshipStatus.REQUESTED);
 
@@ -115,11 +103,8 @@ public class FriendshipServiceTests {
 
     @Test(expected = InvalidFriendshipStatus.class)
     public void requestFriendshipAlreadyRequested() {
-        User user = new User();
-        user.setUsername("requester");
-
-        User friend = new User();
-        friend.setUsername("requested");
+        User user = new User("requester", "pass");
+        User friend = new User("requested", "pass");
 
         Friendship friendship = new Friendship(user, friend, FriendshipStatus.REQUESTED);
 
@@ -130,18 +115,15 @@ public class FriendshipServiceTests {
 
     @Test(expected = IllegalArgumentException.class)
     public void requestFriendshipItself() {
-        User user = new User();
-        user.setUsername("requester");
+        User user = new User("requester", "pass");
         this.friendshipService.requestFriendship(user, user);
     }
 
     @Test
     public void requestAccept(){
-        User user = new User();
-        user.setUsername("requested");
+        User user = new User("requested", "pass");
 
-        User friend = new User();
-        friend.setUsername("requester");
+        User friend = new User("requester", "pass");
 
         Friendship friendshipRequested = new Friendship(friend, user, FriendshipStatus.REQUESTED);
         Mockito.when(this.friendshipRepository.findByUserAndFriend(friend, user))
@@ -159,22 +141,18 @@ public class FriendshipServiceTests {
 
     @Test(expected = InvalidFriendshipStatus.class)
     public void requestAcceptNotRequested(){
-        User user = new User();
-        user.setUsername("requested");
+        User user = new User("requested", "pass");
 
-        User friend = new User();
-        friend.setUsername("requester");
+        User friend = new User("requester", "pass");
 
         this.friendshipService.acceptFriendship(user, friend);
     }
 
     @Test(expected = InvalidFriendshipStatus.class)
     public void requestAcceptAlreadyFriends(){
-        User user = new User();
-        user.setUsername("requested");
+        User user = new User("requested", "pass");
 
-        User friend = new User();
-        friend.setUsername("requester");
+        User friend = new User("requester", "pass");
 
         Friendship friendshipRequested = new Friendship(friend, user, FriendshipStatus.ACCEPTED);
         Mockito.when(this.friendshipRepository.findByUserAndFriend(friend, user))
@@ -185,11 +163,8 @@ public class FriendshipServiceTests {
 
     @Test(expected = InvalidFriendshipStatus.class)
     public void requestAcceptAlreadyReverseFriends(){
-        User user = new User();
-        user.setUsername("requested");
-
-        User friend = new User();
-        friend.setUsername("requester");
+        User user = new User("requested", "pass");
+        User friend = new User("requester", "pass");
 
         Friendship friendshipRequested = new Friendship(user, friend, FriendshipStatus.ACCEPTED);
         Mockito.when(this.friendshipRepository.findByUserAndFriend(user, friend))
@@ -200,11 +175,8 @@ public class FriendshipServiceTests {
 
     @Test(expected = InvalidFriendshipStatus.class)
     public void requestDeclineNotRequested(){
-        User user = new User();
-        user.setUsername("requested");
-
-        User friend = new User();
-        friend.setUsername("requester");
+        User user = new User("requested", "pass");
+        User friend = new User("requester", "pass");
 
         this.friendshipService.declineFriendship(user, friend);
     }

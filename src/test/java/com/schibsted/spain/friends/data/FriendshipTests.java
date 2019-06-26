@@ -28,13 +28,8 @@ public class FriendshipTests {
 
     @Test
     public void findFriendshipByUser() {
-        User user1 = new User();
-        user1.setUsername("user1");
-        user1.setPassword("pass");
-
-        User user2 = new User();
-        user2.setUsername("user2");
-        user2.setPassword("pass");
+        User user1 = new User("user1", "pass");
+        User user2 = new User("user2", "pass");
 
         Friendship registeredFriendship = new Friendship(user1, user2, FriendshipStatus.ACCEPTED);
         entityManager.persist(registeredFriendship);
@@ -47,13 +42,8 @@ public class FriendshipTests {
 
     @Test
     public void findFriendshipByFriend() {
-        User user1 = new User();
-        user1.setUsername("user1");
-        user1.setPassword("pass");
-
-        User user2 = new User();
-        user2.setUsername("user2");
-        user2.setPassword("pass");
+        User user1 = new User("user1", "pass");
+        User user2 = new User("user2", "pass");
 
         Friendship registeredFriendship = new Friendship(user1, user2, FriendshipStatus.ACCEPTED);
         entityManager.persist(registeredFriendship);

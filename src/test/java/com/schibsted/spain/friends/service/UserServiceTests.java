@@ -49,9 +49,7 @@ public class UserServiceTests {
 
     @Before
     public void setUp() {
-        User test = new User();
-        test.setUsername("test");
-        test.setPassword(this.passwordEncoder.encode("pass"));
+        User test = new User("test", this.passwordEncoder.encode("pass"));
 
         Mockito.when(userRepository.findByUsername(test.getUsername()))
                 .thenReturn(Optional.of(test));
@@ -65,24 +63,22 @@ public class UserServiceTests {
 
     @Test
     public void registerNewUser(){
-        User newUser = new User();
-        newUser.setUsername("test2");
-        newUser.setPassword("pass2");
+        String password = "pass2";
+        User newUser = new User("test2", this.passwordEncoder.encode(password));
 
         Mockito.when(userRepository.save(newUser))
                 .thenReturn(newUser);
 
-        User registerNewUser = this.userService.registerNewUser(newUser.getUsername(), newUser.getPassword());
+        User registeredNewUser = this.userService.registerNewUser(newUser.getUsername(), password);
 
-        Assert.assertNotNull(registerNewUser);
+        Assert.assertNotNull(registeredNewUser);
+        Assert.assertEquals(newUser.getUsername(), registeredNewUser.getUsername());
+        Assert.assertTrue(this.passwordEncoder.matches(password, registeredNewUser.getPassword()));
     }
 
     @Test(expected = DuplicatedUserException.class)
     public void registerAlreadyPresentUser(){
-        User newUser = new User();
-        newUser.setUsername("test");
-        newUser.setPassword("pass2");
-
+        User newUser = new User("test", "pass2");
         this.userService.registerNewUser(newUser.getUsername(), newUser.getPassword());
     }
 

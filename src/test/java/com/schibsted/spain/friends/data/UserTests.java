@@ -27,9 +27,7 @@ public class UserTests {
     @Test
     public void findUserByUsername() {
         // given
-        User registeredUser = new User();
-        registeredUser.setUsername("test");
-        registeredUser.setPassword("pass");
+        User registeredUser = new User("test", "pass");
         entityManager.persist(registeredUser);
         entityManager.flush();
         userRepository.save(registeredUser);
@@ -46,9 +44,7 @@ public class UserTests {
     @Test
     public void existsUserByUsername(){
         // given
-        User registeredUser = new User();
-        registeredUser.setUsername("test");
-        registeredUser.setPassword("pass");
+        User registeredUser = new User("test", "pass");
         entityManager.persist(registeredUser);
         entityManager.flush();
         userRepository.save(registeredUser);

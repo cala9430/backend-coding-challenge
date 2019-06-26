@@ -38,9 +38,7 @@ public class UserService {
             throw new DuplicatedUserException(String.format("Username %s is already taken", username));
         }
 
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setPassword(this.encoder.encode(password));
+        User newUser = new User(username, this.encoder.encode(password));
 
         return this.userRepository.save(newUser);
     }
