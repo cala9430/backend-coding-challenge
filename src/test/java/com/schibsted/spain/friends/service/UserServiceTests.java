@@ -14,6 +14,8 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
@@ -28,10 +30,16 @@ public class UserServiceTests {
         public UserService userService() {
             return new UserService();
         }
+
+        @Bean
+        public PasswordEncoder passwordEncoder() { return PasswordEncoderFactories.createDelegatingPasswordEncoder(); }
     }
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @MockBean
     private UserRepository userRepository;
@@ -43,12 +51,9 @@ public class UserServiceTests {
     public void setUp() {
         User test = new User();
         test.setUsername("test");
-        test.setPassword("pass");
+        test.setPassword(this.passwordEncoder.encode("pass"));
 
         Mockito.when(userRepository.findByUsername(test.getUsername()))
-                .thenReturn(Optional.of(test));
-
-        Mockito.when(userRepository.findByUsernameAndPassword(test.getUsername(), test.getPassword()))
                 .thenReturn(Optional.of(test));
 
         Mockito.when(userRepository.existsUserByUsername(test.getUsername()))
@@ -103,7 +108,7 @@ public class UserServiceTests {
         User user = this.userService.authenticateUser(username, password);
         Assert.assertNotNull(user);
         Assert.assertEquals(username, user.getUsername());
-        Assert.assertEquals(password, user.getPassword());
+        Assert.assertTrue( this.passwordEncoder.matches("pass", user.getPassword()));
     }
 
     @Test(expected = InvalidCredentialsException.class)

@@ -6,6 +6,7 @@ import com.schibsted.spain.friends.domain.exception.InvalidCredentialsException;
 import com.schibsted.spain.friends.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,6 +19,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     /**
      * Registers a new User
@@ -36,7 +40,7 @@ public class UserService {
 
         User newUser = new User();
         newUser.setUsername(username);
-        newUser.setPassword(password);
+        newUser.setPassword(this.encoder.encode(password));
 
         return this.userRepository.save(newUser);
     }
@@ -48,8 +52,8 @@ public class UserService {
      * @return          User if credentials were Ok
      */
     public User authenticateUser(String username, String password){
-        Optional<User> optionalUser = this.userRepository.findByUsernameAndPassword(username, password);
-        if(optionalUser.isPresent()){
+        Optional<User> optionalUser = this.userRepository.findByUsername(username);
+        if(optionalUser.isPresent() && this.encoder.matches(password, optionalUser.get().getPassword())){
             return optionalUser.get();
         }
         throw new InvalidCredentialsException();
