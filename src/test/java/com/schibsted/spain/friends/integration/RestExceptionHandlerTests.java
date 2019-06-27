@@ -73,5 +73,15 @@ public class RestExceptionHandlerTests {
         Assert.assertNull(exception.getMessage());
     }
 
+    @Test
+    public void testExceptionHandling() {
+        ResponseEntity response = handler.handleException(new Exception("message"), null);
+        ApiException exception = (ApiException)response.getBody();
+
+        HttpStatus expectedStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        Assert.assertEquals(expectedStatus, response.getStatusCode());
+        Assert.assertEquals(expectedStatus, exception.getStatus());
+        Assert.assertEquals("message", exception.getMessage());
+    }
 
 }

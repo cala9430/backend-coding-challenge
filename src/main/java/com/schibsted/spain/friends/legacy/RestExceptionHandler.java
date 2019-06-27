@@ -18,8 +18,10 @@ public class RestExceptionHandler {
     public ResponseEntity handleException(Exception ex, WebRequest request){
         if(ex instanceof InvalidCredentialsException){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiException(HttpStatus.FORBIDDEN, ex.getMessage()));
+        }else if(ex instanceof IllegalArgumentException || ex instanceof DuplicatedUserException || ex instanceof InvalidFriendshipStatus|| ex instanceof UsernameNotFoundException){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiException(HttpStatus.BAD_REQUEST, ex.getMessage()));
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiException(HttpStatus.BAD_REQUEST, ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()));
     }
 
 }
