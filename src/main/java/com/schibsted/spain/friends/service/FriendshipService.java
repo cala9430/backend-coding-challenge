@@ -106,18 +106,4 @@ public class FriendshipService {
 
         return this.friendshipRepository.save(friendshipRequest);
     }
-
-    /**
-     * Extracts the right username from friendship for user
-     * @param user          User requesting
-     * @param friendship    Friendship to be processed
-     * @return              Username of friend
-     */
-    private String extractFriendUsername(User user, Friendship friendship) {
-        if(friendship.getUser().equals(user)){
-            return friendship.getFriend().getUsername();
-        }else{
-            return friendship.getUser().getUsername();
-        }
-    }
 }
