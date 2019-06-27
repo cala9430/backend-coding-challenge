@@ -41,7 +41,7 @@ public class FriendshipServiceTests {
     public void setUp() throws Exception {
         User user = new User("test1", "pass");
 
-        Mockito.when(friendshipRepository.findAllByUserAndStatus(user, FriendshipStatus.ACCEPTED)).thenReturn(new ArrayList<>());
+        Mockito.when(friendshipRepository.findAllFriendsByUserAndStatus(user, FriendshipStatus.ACCEPTED)).thenReturn(new ArrayList<>());
 
         User user2 = new User("test2", "pass");
 
@@ -51,8 +51,8 @@ public class FriendshipServiceTests {
 
         Friendship friendship2 = new Friendship(user3, user, FriendshipStatus.ACCEPTED);
 
-        Mockito.when(friendshipRepository.findAllByUserAndStatus(user2, FriendshipStatus.ACCEPTED)).thenReturn(Arrays.asList(friendship));
-        Mockito.when(friendshipRepository.findAllByUserAndStatus(user,FriendshipStatus.ACCEPTED)).thenReturn(Arrays.asList(friendship, friendship2));
+        Mockito.when(friendshipRepository.findAllFriendsByUserAndStatus(user2, FriendshipStatus.ACCEPTED)).thenReturn(Arrays.asList(friendship.getFriend().getUsername()));
+        Mockito.when(friendshipRepository.findAllFriendsByUserAndStatus(user,FriendshipStatus.ACCEPTED)).thenReturn(Arrays.asList(friendship.getUser().getUsername(), friendship2.getUser().getUsername()));
     }
 
     @Test

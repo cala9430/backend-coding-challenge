@@ -35,9 +35,10 @@ public class FriendshipTests {
         entityManager.persist(registeredFriendship);
         entityManager.flush();
 
-        List<Friendship> friendshipList = this.friendshipRepository.findAllByUserAndStatus(user1, FriendshipStatus.ACCEPTED);
+        List<String> friendshipList = this.friendshipRepository.findAllFriendsByUserAndStatus(user1, FriendshipStatus.ACCEPTED);
 
         Assert.assertEquals(1, friendshipList.size());
+        Assert.assertEquals(user2.getUsername(), friendshipList.get(0));
     }
 
     @Test
@@ -49,8 +50,19 @@ public class FriendshipTests {
         entityManager.persist(registeredFriendship);
         entityManager.flush();
 
-        List<Friendship> friendshipList = this.friendshipRepository.findAllByUserAndStatus(user2, FriendshipStatus.ACCEPTED);
+        List<String> friendshipList = this.friendshipRepository.findAllFriendsByUserAndStatus(user2, FriendshipStatus.ACCEPTED);
 
+        Assert.assertNotNull(friendshipList);
         Assert.assertEquals(1, friendshipList.size());
+        Assert.assertEquals(user1.getUsername(), friendshipList.get(0));
+    }
+
+    @Test
+    public void findFriendshipEmpty() {
+        User user1 = new User("user1", "pass");
+
+        List<String> friendshipList = this.friendshipRepository.findAllFriendsByUserAndStatus(user1, FriendshipStatus.ACCEPTED);
+
+        Assert.assertEquals(0, friendshipList.size());
     }
 }

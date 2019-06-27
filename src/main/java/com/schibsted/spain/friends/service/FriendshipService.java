@@ -5,10 +5,8 @@ import com.schibsted.spain.friends.domain.FriendshipStatus;
 import com.schibsted.spain.friends.domain.User;
 import com.schibsted.spain.friends.domain.exception.InvalidFriendshipStatus;
 import com.schibsted.spain.friends.repository.FriendshipRepository;
-import com.schibsted.spain.friends.service.comparator.FriendshipComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -21,24 +19,13 @@ public class FriendshipService {
     @Autowired
     private FriendshipRepository friendshipRepository;
 
-    private FriendshipComparator friendshipComparator = new FriendshipComparator();
-
     /**
      * Lists Users username with friendship accepted for the user requested
      * @param user  User to be evaluated
      * @return      List of usernames
      */
     public List<String> listAcceptedFriendshipUsers(User user){
-        List<String> result = new ArrayList<>();
-
-        List<Friendship> friendships = this.friendshipRepository.findAllByUserAndStatus(user, ACCEPTED);
-
-        if(!CollectionUtils.isEmpty(friendships)){
-            friendships.sort((o1,o2)-> friendshipComparator.compare(o1,o2));
-            friendships.forEach(friendship -> result.add(this.extractFriendUsername(user, friendship)));
-        }
-
-        return result;
+        return this.friendshipRepository.findAllFriendsByUserAndStatus(user, ACCEPTED);
     }
 
     /**
