@@ -67,43 +67,56 @@ public class FriendshipService {
         return this.saveFriendshipStatus(user, friend, newStatus);
     }
 
-    /**
-     * State machine for Friendship status. Creates a friendship Request or updates the existing one when Declining or Accepting
-     * @param user      User that performs the action
-     * @param friend    User target of the action
-     * @param newStatus New Status for the friendship
-     * @return          Resultant friendship entity
-     */
     @Transactional
     protected Friendship saveFriendshipStatus(User user, User friend, FriendshipStatus newStatus){
         Optional<Friendship> actualFriendship = this.friendshipRepository.findByUserAndFriend(user, friend);
         Optional<Friendship> reverseFriendship = this.friendshipRepository.findByUserAndFriend(friend, user);
 
+        this.validateNewStatus(actualFriendship.orElse(null), reverseFriendship.orElse(null), newStatus );
+
         Friendship friendshipRequest;
+
+        if(REQUESTED.equals(newStatus)){
+            friendshipRequest = new Friendship(user, friend, newStatus);
+        }else{
+            friendshipRequest = reverseFriendship.get();
+            friendshipRequest.setStatus(newStatus);
+        }
+
+        return this.friendshipRepository.save(friendshipRequest);
+    }
+
+    /**
+     * State machine for Friendship status. Creates a friendship Request or updates the existing one when Declining or Accepting
+     * @param actualFriendship  Friendship from User to Friend
+     * @param reverseFriendship Friendship from Friend to User
+     * @param newStatus         new desired Status
+     */
+    private void validateNewStatus(Friendship actualFriendship, Friendship reverseFriendship, FriendshipStatus newStatus){
+
+        boolean alreadyFriends = actualFriendship != null && !DECLINED.equals(actualFriendship.getStatus());
+
         switch (newStatus){
             case REQUESTED:
-                if ((actualFriendship.isPresent() && !DECLINED.equals(actualFriendship.get().getStatus())) ||
-                    (reverseFriendship.isPresent() && !DECLINED.equals(reverseFriendship.get().getStatus()))){
+                boolean alreadyReverseFriends = reverseFriendship != null && !DECLINED.equals(reverseFriendship.getStatus());
+
+                if ( alreadyFriends || alreadyReverseFriends ){
                     throw new InvalidFriendshipStatus("Cannot ask friendship. There is friendship request");
                 }
-
-                friendshipRequest = new Friendship(user, friend, newStatus);
 
                 break;
             case ACCEPTED:
             case DECLINED:
-                if ((actualFriendship.isPresent() && !DECLINED.equals(actualFriendship.get().getStatus())) || !reverseFriendship.isPresent() || !REQUESTED.equals(reverseFriendship.get().getStatus())){
+                boolean friendshipNotRequested = reverseFriendship == null || !REQUESTED.equals(reverseFriendship.getStatus());
+
+                if ( alreadyFriends|| friendshipNotRequested){
                     throw new InvalidFriendshipStatus("Cannot accept nor decline friendship. There is no friendship request");
                 }
-
-                friendshipRequest = reverseFriendship.get();
-                friendshipRequest.setStatus(newStatus);
 
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unmapped friendship status: %s", String.valueOf(newStatus)));
         }
 
-        return this.friendshipRepository.save(friendshipRequest);
     }
 }
